@@ -227,11 +227,13 @@ class JiraApi(BaseApi):
     def _fetch_worklog(self, worklog_filter, issue):
         worklogs = []
         start = 0
-        resp = self._get("rest/api/2/issue/{key}/worklog?maxResults={pageSize}".format(key=issue["key"], pageSize=PAGE_SIZE))
+        startedAfter = "" if worklog_filter.min_date is None else "&startedAfter={}".format(int(worklog_filter.min_date.timestamp() - 3600*24) * 1000)
+        startedBefore = "" if worklog_filter.max_date is None else "&startedBefore={}".format(int(worklog_filter.max_date.timestamp()) * 1000)
+        resp = self._get("rest/api/2/issue/{key}/worklog?maxResults={pageSize}{startedAfter}{startedBefore}".format(key=issue["key"], pageSize=PAGE_SIZE, startedAfter=startedAfter, startedBefore=startedBefore))
         worklogs += resp["worklogs"]
         while resp["total"] > len(worklogs):
             start += PAGE_SIZE
-            resp = self._get("rest/api/2/issue/{key}/worklog?startAt={startAt}&maxResults={pageSize}".format(key=issue["key"], startAt=start, pageSize=PAGE_SIZE))
+            resp = self._get("rest/api/2/issue/{key}/worklog?startAt={startAt}&maxResults={pageSize}{startedAfter}{startedBefore}".format(key=issue["key"], startAt=start, pageSize=PAGE_SIZE, startedAfter=startedAfter, startedBefore=startedBefore))
             worklogs += resp["worklogs"]
 
         for worklog in worklogs:
