@@ -21,8 +21,8 @@ async function main() {
                 }
             },
             untilFirst() {
-                let lastShownDay = today.clone().add(dayCounter + 1, 'days');
-                // if the user clicks on the button when a complete month is shown, add another month
+                let lastShownDay;
+                // add at least one day; this way a user can add multiple months
                 do {
                     addDay();
                     lastShownDay = today.clone().add(dayCounter + 1, 'days');
@@ -39,10 +39,6 @@ async function main() {
         var loop_day = today.clone().add(dayCounter--, 'days');
         app.days.push(makeDay(loop_day));
     }
-
-    /*for (var i = 0; i < 10; i++) {
-        addDay();
-    }*/
 }
 
 window.addEventListener("load", () => {

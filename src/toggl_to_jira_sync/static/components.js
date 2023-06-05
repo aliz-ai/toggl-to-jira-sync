@@ -141,14 +141,14 @@ Vue.component("sync-app", {
 });
 
 function calendarDay(m) {
-    return m?.format('YYYY-MM-DD') + m?.calendar({
-        sameDay: '[ (Today)]',
-        nextDay: '[ (Tomorrow)]',
-        nextWeek: '[ (]dddd[)]',
-        lastDay: '[ (Yesterday)]',
-        lastWeek: '[ (]dddd[)]',
-        sameElse: '[ (]dddd[)]'
-    });
+    return m?.format('YYYY-MM-DD') + ' (' + m?.calendar({
+        lastDay: '[Yesterday]',
+        sameDay: '[Today]',
+        nextDay: '[Tomorrow]',
+        lastWeek: 'dddd',
+        nextWeek: 'dddd',
+        sameElse: 'dddd'
+    }) + ')';
 }
 
 window.calendarDay = calendarDay;
