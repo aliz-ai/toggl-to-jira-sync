@@ -97,16 +97,33 @@ Vue.component("sync-day", {
 Vue.component("sync-app", {
     template: `
         <div class="sync-app">
-            <div class="sync-title">
-                <h1>Toggl-Jira sync tool for <strong>{{ settings?.jira_username ?? '...' }}</strong></h1>
-                <div>
-                    <button
-                        type="button"
-                        v-on:click="$emit('more-days')"
-                        class="btn btn-info"
-                    >Load more days</button>
+            <nav class="navbar sticky-top navbar-light bg-light">
+                <div class="sync-title">
+                    <h1>Toggl-Jira sync tool for <strong>{{ settings?.jira_username ?? '...' }}</strong></h1>
+                    <div>
+                        <button
+                            type="button"
+                            v-on:click="$emit('until-first')"
+                            class="btn btn-primary"
+                        >Load until 1st</button>
+                        <button
+                            type="button"
+                            v-on:click="$emit('more-days', 1)"
+                            class="btn btn-info"
+                        >Load 1 more day</button>
+                        <button
+                            type="button"
+                            v-on:click="$emit('more-days', 3)"
+                            class="btn btn-info"
+                        >Load 3 more days</button>
+                        <button
+                            type="button"
+                            v-on:click="$emit('more-days', 7)"
+                            class="btn btn-info"
+                        >Load 7 more days</button>
+                    </div>
                 </div>
-            </div>
+            </nav>
             <div v-for="day in days">
                 <sync-day v-bind:day="day"></sync-day>
             </div>
@@ -124,14 +141,14 @@ Vue.component("sync-app", {
 });
 
 function calendarDay(m) {
-    return m?.calendar(null,{
-        lastDay : '[Yesterday]',
-        sameDay : '[Today]',
-        nextDay : '[Tomorrow]',
-        lastWeek : '[last] dddd',
-        nextWeek : 'dddd',
-        sameElse : 'L'
-    });
+    return m?.format('YYYY-MM-DD') + ' (' + m?.calendar({
+        lastDay: '[Yesterday]',
+        sameDay: '[Today]',
+        nextDay: '[Tomorrow]',
+        lastWeek: 'dddd',
+        nextWeek: 'dddd',
+        sameElse: 'dddd'
+    }) + ')';
 }
 
 window.calendarDay = calendarDay;

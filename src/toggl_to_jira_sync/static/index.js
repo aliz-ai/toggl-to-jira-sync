@@ -7,17 +7,26 @@ async function main() {
         template: `
             <sync-app
                 v-bind:days="days"
-                v-on:more-days="moreDays()"
+                v-on:more-days="moreDays"
+                v-on:until-first="untilFirst"
             ></sync-app>
         `,
         data: {
             days: [],
         },
         methods: {
-            moreDays() {
-                for (var i = 0; i < 3; i++) {
+            moreDays(n) {
+                for (var i = 0; i < n; i++) {
                     addDay();
                 }
+            },
+            untilFirst() {
+                let lastShownDay;
+                // add at least one day; this way a user can add multiple months
+                do {
+                    addDay();
+                    lastShownDay = today.clone().add(dayCounter + 1, 'days');
+                } while (lastShownDay.date() > 1);
             }
         }
     });
@@ -29,10 +38,6 @@ async function main() {
     function addDay() {
         var loop_day = today.clone().add(dayCounter--, 'days');
         app.days.push(makeDay(loop_day));
-    }
-
-    for (var i = 0; i < 10; i++) {
-        addDay();
     }
 }
 
