@@ -8,7 +8,7 @@ import flask
 from jinja2 import Undefined
 from markupsafe import Markup
 from tzlocal import get_localzone
-from werkzeug.urls import url_encode
+from werkzeug.urls import urlencode
 
 from . import settingsloader, utils, actions, service, api_controller
 from .api_service import determine_actions_and_map
@@ -105,7 +105,7 @@ def modify_query(**kwargs):
     _update_allowing_pop(params, kwargs)
     if not params:
         return flask.request.path
-    return '{}?{}'.format(flask.request.path, url_encode(params))
+    return '{}?{}'.format(flask.request.path, urlencode(params))
 
 
 def _update_allowing_pop(params, new_params):

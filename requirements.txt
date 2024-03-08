@@ -3,5 +3,4 @@ requests>=2.20.0
 pytz>=2019.1
 tzlocal>=1.5.1
 python-dotenv>=0.10.3
-werkzeug==0.16.1
-markupsafe==2.0.1
+werkzeug>=3.0.0
