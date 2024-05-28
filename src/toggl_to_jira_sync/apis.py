@@ -65,10 +65,10 @@ class TogglApi(BaseApi):
         return self._request("get", url, params=params)
 
     def get_projects(self, workspace_id):
-        return self._get("v8/workspaces/{workspace_id}/projects".format(workspace_id=workspace_id))
+        return self._get("v9/workspaces/{workspace_id}/projects".format(workspace_id=workspace_id), params={"billable": "true"})
 
     def get_workspaces(self):
-        return self._get("v8/workspaces")
+        return self._get("v9/workspaces")
 
     def get_entries(self, start_datetime=None, end_datetime=None):
         params = {}
@@ -76,7 +76,7 @@ class TogglApi(BaseApi):
             params["start_date"] = datetime_toggl_format.to_str(start_datetime)
         if end_datetime is not None:
             params["end_date"] = datetime_toggl_format.to_str(end_datetime)
-        return self._get("v8/time_entries", params=params)
+        return self._get("v9/me/time_entries", params=params)
 
     def get_worklog(self, workspace_name, min_datetime=None, max_datetime=None):
         workspaces = self.get_workspaces()
@@ -98,8 +98,8 @@ class TogglApi(BaseApi):
             "worklog": worklog,
         }
 
-    def update(self, id, data):
-        self._put_entry(id, data)
+    def update(self, workspace_id, time_entry_id, data):
+        self._put_entry(workspace_id, time_entry_id, data)
 
     @classmethod
     def _extract_entry(cls, entry, project, project_pid):
@@ -128,9 +128,9 @@ class TogglApi(BaseApi):
         return utils.strip_after_any(description.strip(), (":", " ")).strip()
 
     def _get_entry(self, id):
-        return self._get("v8/time_entries/{id}".format(id=id))
+        return self._get("v9/me/time_entries/{id}".format(id=id))
 
-    def _put_entry(self, id, data):
+    def _put_entry(self, workspace_id, time_entry_id, data):
         data = [
             ("description", data.get("comment")),
             ("start", data.get("start")),
@@ -139,7 +139,7 @@ class TogglApi(BaseApi):
             ("billable", data.get("billable")),
         ]
         data = {k: v for k, v in data if v is not None}
-        return self._request("put", "v8/time_entries/{id}".format(id=id), json={"time_entry": data})
+        return self._request("put", "v9/workspaces/{workspace_id}/time_entries/{time_entry_id}".format(workspace_id=workspace_id, time_entry_id=time_entry_id), json={"time_entry": data})
 
 
 JiraWorklogFilter = namedtuple("JiraWorklogFilter", ["author", "min_date", "max_date"])
