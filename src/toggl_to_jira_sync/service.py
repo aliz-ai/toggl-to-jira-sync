@@ -52,7 +52,7 @@ class ActionExecutor(object):
         action["result"] = getattr(self, "_action_{type}_{action}".format(**action))(action)
 
     def _action_toggl_update(self, action):
-        self.apis.toggl.update(action["id"], action["values"])
+        self.apis.toggl.update(action["workspace_id"], action["id"], action["values"])
 
     def _action_jira_create(self, action):
         self.apis.jira.add_entry(action["issue"], action["values"])
