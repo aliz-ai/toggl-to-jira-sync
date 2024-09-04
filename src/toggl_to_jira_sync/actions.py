@@ -20,15 +20,15 @@ JIRA_FIELDS = {"started", "timeSpentSeconds", "comment"}
 class ActionRecorder(object):
     def __init__(self, expected_issue, jira_issue, toggl_workspace_id, toggl_id, jira_id):
         self.messages = []
-        self._toggl_updates = dict()
-        self._jira_updates = dict()
-        self._jira_delete = False
-        self._jira_create = False
-        self._toggl_workspace_id = toggl_workspace_id
-        self._toggl_id = toggl_id
-        self._jira_id = jira_id
         self._expected_issue = expected_issue
+        self._jira_create = False
+        self._jira_delete = False
+        self._jira_id = jira_id
         self._jira_issue = jira_issue
+        self._jira_updates = dict()
+        self._toggl_id = toggl_id
+        self._toggl_updates = dict()
+        self._toggl_workspace_id = toggl_workspace_id
 
     def message(self, message, level, context=None):
         if context is None:

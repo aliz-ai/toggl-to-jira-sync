@@ -130,8 +130,8 @@ class TogglApi(BaseApi):
     def _extract_issue(description):
         return utils.strip_after_any(description.strip(), (":", " ")).strip()
 
-    def _get_entry(self, id):
-        return self._get("v9/me/time_entries/{id}".format(id=id))
+    def _get_entry(self, time_entry_id):
+        return self._get("v9/me/time_entries/{time_entry_id}".format(time_entry_id=time_entry_id))
 
     def _put_entry(self, workspace_id, time_entry_id, data):
         data = [
