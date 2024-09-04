@@ -39,7 +39,10 @@ class BaseApi(object):
             logger.debug(resp.text)
             raise
         if resp.text:
-            return resp.json()
+            jsonResult = resp.json()
+            jsonResultAsString = str(jsonResult)
+            logger.debug("Api call result %s", (jsonResultAsString[:1000] + '..') if len(jsonResultAsString) > 1000 else jsonResultAsString)
+            return jsonResult
         return None
 
 
@@ -139,7 +142,7 @@ class TogglApi(BaseApi):
             ("billable", data.get("billable")),
         ]
         data = {k: v for k, v in data if v is not None}
-        return self._request("put", "v9/workspaces/{workspace_id}/time_entries/{time_entry_id}".format(workspace_id=workspace_id, time_entry_id=time_entry_id), json={"time_entry": data})
+        return self._request("put", "v9/workspaces/{workspace_id}/time_entries/{time_entry_id}".format(workspace_id=workspace_id, time_entry_id=time_entry_id), json=data)
 
 
 JiraWorklogFilter = namedtuple("JiraWorklogFilter", ["author", "min_date", "max_date"])
