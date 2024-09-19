@@ -15,6 +15,7 @@ automatically:
 if set up correctly (won't work for today if your timer is currently running)
 
 
+
 How to use
 ----------
 
