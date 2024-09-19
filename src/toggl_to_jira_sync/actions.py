@@ -18,16 +18,17 @@ JIRA_FIELDS = {"started", "timeSpentSeconds", "comment"}
 
 
 class ActionRecorder(object):
-    def __init__(self, expected_issue, jira_issue, toggl_id, jira_id):
+    def __init__(self, expected_issue, jira_issue, toggl_workspace_id, toggl_id, jira_id):
         self.messages = []
-        self._toggl_updates = dict()
-        self._jira_updates = dict()
-        self._jira_delete = False
-        self._jira_create = False
-        self._toggl_id = toggl_id
-        self._jira_id = jira_id
         self._expected_issue = expected_issue
+        self._jira_create = False
+        self._jira_delete = False
+        self._jira_id = jira_id
         self._jira_issue = jira_issue
+        self._jira_updates = dict()
+        self._toggl_id = toggl_id
+        self._toggl_updates = dict()
+        self._toggl_workspace_id = toggl_workspace_id
 
     def message(self, message, level, context=None):
         if context is None:
@@ -58,6 +59,7 @@ class ActionRecorder(object):
             result.append({
                 "type": "toggl",
                 "action": "update",
+                "workspace_id": self._toggl_workspace_id,
                 "id": self._toggl_id,
                 "values": self._toggl_updates,
                 "issue": self._expected_issue,
@@ -111,6 +113,7 @@ class DiffGather(object):
         recorder = ActionRecorder(
             expected_issue=toggl.issue if toggl is not None else None,
             jira_issue=jira.issue if jira is not None else None,
+            toggl_workspace_id=toggl.tag.raw_entry.get("workspace_id") if toggl is not None else None,
             toggl_id=toggl.tag.id if toggl is not None else None,
             jira_id=jira.tag.id if jira is not None else None,
         )
